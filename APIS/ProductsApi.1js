@@ -1,0 +1,37 @@
+const express=require("express");
+const app=express();
+const products=require("./products");
+const cors = require("cors");
+app.use(cors({
+    origin: "http://localhost:3000",
+    credentials: true
+}));
+app.use(express.json());
+
+
+app.get('/products/:category',(req,res)=>{
+    const ct=req.params.category;
+   console.log(ct);
+    const {ram,storage,processor}=req.query;
+    let pr=products.filter((ele)=>ele.category.toLowerCase() === ct.toLowerCase());
+    if(ram){
+        pr=pr.filter((ele)=>ele.specs.ram===ram);
+    }
+     if(storage){
+        pr=pr.filter((ele)=>ele.specs.storage===storage);
+    }
+     if(processor){
+        pr=pr.filter((ele)=>ele.specs.processor===processor);
+    }
+
+    res.status(200).json(pr);
+   
+
+});
+
+app.listen(5000,()=>{
+    console.log("server started!");
+});
+
+
+
