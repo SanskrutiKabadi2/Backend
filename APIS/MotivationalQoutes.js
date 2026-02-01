@@ -1,0 +1,100 @@
+const express=require("express");
+const app=express();
+const cors = require("cors");
+app.use(cors({
+    origin: "http://localhost:3000",
+    credentials: true
+}));
+app.use(express.json());
+
+const motQoute=[
+  { "id": 1, "quote": "Believe you can and you're halfway there.", "author": "Theodore Roosevelt" },
+  { "id": 2, "quote": "Your time is limited, so don’t waste it living someone else’s life.", "author": "Steve Jobs" },
+  { "id": 3, "quote": "Success is not final, failure is not fatal: it is the courage to continue that counts.", "author": "Winston Churchill" },
+  { "id": 4, "quote": "Dream big and dare to fail.", "author": "Norman Vaughan" },
+  { "id": 5, "quote": "The harder you work for something, the greater you’ll feel when you achieve it.", "author": "Unknown" },
+  { "id": 6, "quote": "Don’t stop when you’re tired. Stop when you’re done.", "author": "Unknown" },
+  { "id": 7, "quote": "Wake up with determination. Go to bed with satisfaction.", "author": "Unknown" },
+  { "id": 8, "quote": "Do something today that your future self will thank you for.", "author": "Anonymous" },
+  { "id": 9, "quote": "Little things make big days.", "author": "Unknown" },
+  { "id": 10, "quote": "It’s going to be hard, but hard does not mean impossible.", "author": "Unknown" },
+  { "id": 11, "quote": "Push yourself, because no one else is going to do it for you.", "author": "Unknown" },
+  { "id": 12, "quote": "Sometimes later becomes never. Do it now.", "author": "Anonymous" },
+  { "id": 13, "quote": "Great things never come from comfort zones.", "author": "Unknown" },
+  { "id": 14, "quote": "Dream it. Wish it. Do it.", "author": "Unknown" },
+  { "id": 15, "quote": "Success doesn’t just find you. You have to go out and get it.", "author": "Unknown" },
+  { "id": 16, "quote": "The key to success is to focus on goals, not obstacles.", "author": "Anonymous" },
+  { "id": 17, "quote": "Believe in yourself and all that you are.", "author": "Christian D. Larson" },
+  { "id": 18, "quote": "The future depends on what you do today.", "author": "Mahatma Gandhi" },
+  { "id": 19, "quote": "You are stronger than you think.", "author": "Unknown" },
+  { "id": 20, "quote": "Never give up on a dream just because of the time it will take to accomplish it.", "author": "Earl Nightingale" },
+  { "id": 21, "quote": "Opportunities don't happen, you create them.", "author": "Chris Grosser" },
+  { "id": 22, "quote": "Don’t wait. The time will never be just right.", "author": "Napoleon Hill" },
+  { "id": 23, "quote": "If you want it, work for it.", "author": "Unknown" },
+  { "id": 24, "quote": "Failure is the opportunity to begin again more intelligently.", "author": "Henry Ford" },
+  { "id": 25, "quote": "Act as if what you do makes a difference. It does.", "author": "William James" },
+  { "id": 26, "quote": "What we think, we become.", "author": "Buddha" },
+  { "id": 27, "quote": "Hustle in silence and let your success make the noise.", "author": "Unknown" },
+  { "id": 28, "quote": "Be so good they can’t ignore you.", "author": "Steve Martin" },
+  { "id": 29, "quote": "Don’t wish for it. Work for it.", "author": "Unknown" },
+  { "id": 30, "quote": "You miss 100% of the shots you don’t take.", "author": "Wayne Gretzky" },
+  { "id": 31, "quote": "The best way to predict the future is to create it.", "author": "Peter Drucker" },
+  { "id": 32, "quote": "Turn your wounds into wisdom.", "author": "Oprah Winfrey" },
+  { "id": 33, "quote": "Nothing will work unless you do.", "author": "Maya Angelou" },
+  { "id": 34, "quote": "The only limit to our realization of tomorrow is our doubts of today.", "author": "Franklin D. Roosevelt" },
+  { "id": 35, "quote": "Don’t count the days, make the days count.", "author": "Muhammad Ali" },
+  { "id": 36, "quote": "The secret of getting ahead is getting started.", "author": "Mark Twain" },
+  { "id": 37, "quote": "You don’t have to be great to start, but you have to start to be great.", "author": "Zig Ziglar" },
+  { "id": 38, "quote": "Difficult roads often lead to beautiful destinations.", "author": "Unknown" },
+  { "id": 39, "quote": "Stay hungry. Stay foolish.", "author": "Steve Jobs" },
+  { "id": 40, "quote": "Success is walking from failure to failure with no loss of enthusiasm.", "author": "Winston Churchill" },
+  { "id": 41, "quote": "Be yourself; everyone else is already taken.", "author": "Oscar Wilde" },
+  { "id": 42, "quote": "It always seems impossible until it’s done.", "author": "Nelson Mandela" },
+  { "id": 43, "quote": "The only way to do great work is to love what you do.", "author": "Steve Jobs" },
+  { "id": 44, "quote": "Make each day your masterpiece.", "author": "John Wooden" },
+  { "id": 45, "quote": "What you do today can improve all your tomorrows.", "author": "Ralph Marston" },
+  { "id": 46, "quote": "Do what you can, with what you have, where you are.", "author": "Theodore Roosevelt" },
+  { "id": 47, "quote": "Small steps every day lead to big results.", "author": "Unknown" },
+  { "id": 48, "quote": "You are capable of amazing things.", "author": "Unknown" },
+  { "id": 49, "quote": "Focus on progress, not perfection.", "author": "Unknown" },
+  { "id": 50, "quote": "Don’t limit your challenges, challenge your limits.", "author": "Anonymous" }
+]
+
+
+app.get('/motivationalQoute/random',(req,res)=>{
+    const rd=Math.floor(Math.random()*motQoute.length);
+    console.log(rd);
+    res.send(motQoute[rd]["quote"]);
+});
+
+
+app.get('/motivationalQoute/:id',(req,res)=>{
+    const id = Number(req.params.id);
+    
+    if(id<=motQoute.length && id>0){
+        res.send(motQoute[id-1]);
+        return;
+    }
+    res.send("No Motivational Qoute Id Found");
+});
+
+app.get('/motivationalQoutes',(req,res)=>{
+    
+    res.send(motQoute);
+});
+
+app.get('/motivationalQoute',(req,res)=>{
+    const at=req.query.author;
+    console.log(at);
+    const temp=motQoute.filter(qt=>qt.author===at);
+    res.send(temp);
+    
+});
+
+
+
+app.listen(5000,()=>{
+    console.log("server started!");
+});
+
+
