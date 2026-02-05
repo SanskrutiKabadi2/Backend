@@ -1,0 +1,98 @@
+const express=require("express");
+const app=express();
+const books=require("./booksData");
+const cors = require("cors");
+app.use(cors({
+    origin: "http://localhost:3000",
+    credentials: true
+}));
+app.use(express.json());
+
+//for getting all books
+app.get('/books',(req,res)=>{
+    res.status(200).json(books);
+});
+
+//for particular book
+app.get('/books/:id',(req,res)=>{
+    const id=req.params.id;
+    const b=[];
+    const bk=books.find(b=>b.id==id);
+    b.push(bk);
+    res.json(b);
+}); 
+
+//create new book
+app.post('/books',(req,res)=>{
+    const {title,author,price,language}=req.body;
+    const obj={
+        id:books.length+1,
+        title:title,
+        author:author,
+        price:price,
+        language
+
+    };
+    books.push(obj);
+    console.log(books);
+    res.status(201).send("book added");
+});
+
+
+app.put('/books/:id',(req,res)=>{
+    const id=req.params.id;
+    const index=books.findIndex((ele)=>ele.id==id);
+
+    if(index==-1){
+        res.status(404).json({message:"Book not found!"});
+    }
+    const {title,author,price,language}=req.body;
+    books[index]={
+        id,
+        title,
+        author,
+        price,
+        language
+    };
+     console.log(books);
+    res.status(204).send();
+
+});
+
+app.patch('/books/:id',(req,res)=>{
+    const id=req.params.id;
+    const book=books.find((ele)=>ele.id==id);
+    if(!book){
+        res.status(404).json({message:"Book not found!"});
+        return;
+    }
+    const {title,author,price,language}=req.body;
+    if(title!==undefined) book.title=title;
+    if(author!==undefined) book.author=author;
+    if(price!==undefined) book.price=price;
+    if(language!==undefined) book.language=language;
+     console.log(books);
+    res.status(200).json({book});
+
+
+});
+
+app.delete('/books/:id',(req,res)=>{
+    const id=req.params.id;
+    const index=books.findIndex((bk)=>bk.id==id);
+    if(index==-1){
+        res.status(404).send("book not Found!");
+        return;
+    }
+    books.splice(index,1);
+    console.log(books);
+    res.status(200).json({message:"book deleted successfully"});
+
+});
+
+app.listen(5000,()=>{
+    console.log("server started!");
+});
+
+
+
